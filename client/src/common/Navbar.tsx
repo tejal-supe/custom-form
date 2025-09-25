@@ -1,25 +1,70 @@
-import { Button } from '../components/ui/button';
+import { useState } from "react";
+import { Button } from "../components/ui/button";
+import {
+  MobileNav,
+  MobileNavHeader,
+  MobileNavMenu,
+  MobileNavToggle,
+  NavbarButton,
+  NavbarLogo,
+} from "@/components/ui/resizable-navbar";
 
 const Navbar = () => {
-  return (
-    <div className="shadow-sm w-full sticky top-0 !bg-[#43217c]  dark:bg-gray-900 z-[9999]">
-      <div className="w-full mx-auto max-w-7xl p-3 px-5 flex items-center justify-between ">
-        <div className="flex items-center flex-1 gap-9">
-          <div>{/* <Logo url="/" /> */}</div>
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-        
-        </div>
+  return (
+    <div className="shadow-sm w-full sticky top-0 bg-primary dark:bg-dark-background z-[9999]">
+      <div className=" hidden md:flex w-full mx-auto max-w-7xl p-3  items-center justify-between">
+        <NavbarLogo />
         <div className="flex items-center gap-4">
-          <Button variant="outline" className="bg-transparent text-white">
+          <Button
+            variant="outline"
+            className="bg-transparent text-white dark:text-dark-text"
+          >
             Sign In
           </Button>
-          <Button variant="outline" className="bg-transparent text-white">
+          <Button
+            variant="outline"
+            className="bg-transparent text-white dark:text-dark-text"
+          >
             Get Started
           </Button>
         </div>
       </div>
+      {/* Mobile Navigation */}
+      <MobileNav>
+        <MobileNavHeader>
+          <NavbarLogo />
+          <MobileNavToggle
+            isOpen={isMobileMenuOpen}
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          />
+        </MobileNavHeader>
+
+        <MobileNavMenu
+          isOpen={isMobileMenuOpen}
+          onClose={() => setIsMobileMenuOpen(false)}
+        >
+          <div className="flex w-full flex-col gap-4 bg-card-bg dark:bg-dark-card-bg p-4">
+            <NavbarButton
+              onClick={() => setIsMobileMenuOpen(false)}
+              variant="primary"
+              className="w-full bg-primary text-white dark:bg-dark-primary dark:text-dark-text"
+            >
+              Login
+            </NavbarButton>
+            <NavbarButton
+              onClick={() => setIsMobileMenuOpen(false)}
+              variant="primary"
+              className="w-full bg-primary text-white dark:bg-dark-primary dark:text-dark-text"
+            >
+              Get Started
+            </NavbarButton>
+          </div>
+        </MobileNavMenu>
+      </MobileNav>
     </div>
   );
-}
+};
 
-export default Navbar
+export default Navbar;
