@@ -18,6 +18,7 @@ const userSchema = new mongoose.Schema(
     isPremiumUser: {
       type: Boolean,
       required: true,
+      default:false
     },
     formCreationLimit: {
       type: Number,
@@ -26,16 +27,13 @@ const userSchema = new mongoose.Schema(
     },
     subscriptionId: {
       type: String,
-      required: true,
+      required: false,
+      default: ''
     },
     premiumExpiresAt: {
       type: Date,
-      default: () => {
-        const date = new Date();
-        date.setMonth(date.getMonth() + 1);
-        return date;
-      },
-      required: true,
+      default: null,
+      required: false,
     },
     prioritySupport: {
       type: Boolean,
@@ -45,10 +43,12 @@ const userSchema = new mongoose.Schema(
     formsCreated: {
       type: Number,
       required: true,
+      default:0
     },
     subscriptionType: {
       type: String,
       default: "free",
+      required:false
     },
   },
   { timestamps: true }
@@ -56,9 +56,12 @@ const userSchema = new mongoose.Schema(
 
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
-  this.password = await bcrypt.hash(this.password, 10);
-
-  next();
+ try {
+   this.password = await bcrypt.hash(this.password, 10);
+   next();
+ } catch (error) {
+   next(error); // Pass error to next middleware if hashing fails
+ }
 });
 
 const User = mongoose.model("User", userSchema);
