@@ -8,9 +8,11 @@ import {
   NavbarButton,
   NavbarLogo,
 } from "@/components/ui/resizable-navbar";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <div className="shadow-sm w-full sticky top-0 bg-primary dark:bg-dark-background z-[9999]">
@@ -26,6 +28,7 @@ const Navbar = () => {
           <Button
             variant="outline"
             className="bg-transparent text-white dark:text-dark-text"
+            onClick={() => navigate("/register")}
           >
             Get Started
           </Button>
@@ -54,7 +57,10 @@ const Navbar = () => {
               Login
             </NavbarButton>
             <NavbarButton
-              onClick={() => setIsMobileMenuOpen(false)}
+              onClick={() => {
+                setIsMobileMenuOpen(false);
+                navigate("/register");
+              }}
               variant="primary"
               className="w-full bg-primary text-white dark:bg-dark-primary dark:text-dark-text"
             >

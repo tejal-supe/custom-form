@@ -1,15 +1,18 @@
-import LandingPage from "./pages/landing/LandingPage.tsx"
+import { BrowserRouter } from "react-router-dom";
+
 import Navbar from "./common/Navbar.tsx";
-import './App.css'
+import "./App.css";
+import Routing from "./Routing.tsx";
 
 function App() {
-
   return (
     <>
-      <Navbar />
-      <LandingPage />
+      <BrowserRouter>
+        <Navbar />
+        <Routing />
+      </BrowserRouter>
     </>
   );
 }
 
-export default App
+export default App;
