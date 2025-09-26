@@ -1,7 +1,7 @@
 import axios, { type AxiosInstance, type AxiosResponse } from "axios";
 
 export const apiClient: AxiosInstance = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: "/api",
   timeout: 1000,
   withCredentials: true,
   headers: {
