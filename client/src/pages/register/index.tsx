@@ -1,75 +1,139 @@
-import React, { useState } from "react";
+import React from "react";
 import { Label } from "../../components/ui/label";
 import { Input } from "../../components/ui/input";
 import { cn } from "@/lib/utils";
-import type { User } from "@/types/userType";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 import { createUser } from "@/api/userApi";
 
 const Register = () => {
-    const [state,setState]  = useState<User>({name:"",emailId:"",password:""});
+  const formSchema = z.object({
+    name: z
+      .string()
+      .min(2, { message: "Name must be at least 2 characters" })
+      .max(50),
+    emailId: z.string().email({ message: "Invalid email address" }),
+    password: z
+      .string()
+      .min(8, { message: "Password must be at least 8 characters" })
+      .regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, {
+        message:
+          "Password must contain at least one letter, one number, and one special character",
+      }),
+  });
 
-    const handleChange = (e:React.ChangeEvent<HTMLInputElement>)=>{
-      const {name,value} = e.target;
-      setState({...state,[name]:value})
+  type FormData = z.infer<typeof formSchema>;
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isValid },
+    trigger, 
+  } = useForm<FormData>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      emailId: "",
+      password: "",
+    },
+    mode: "onBlur",
+  });
+
+  const onSubmit = async (data: FormData) => {
+    try {
+      const response = await createUser({
+        name: data.name,
+        emailId: data.emailId,
+        password: data.password,
+      });
+      console.log(response, "response");
+    } catch (error) {
+      console.log(error, "error in submit user");
     }
-
-  const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
-      try {
-        e.preventDefault();
-        const response = await createUser(state);
-        console.log(response,'response');
-       
-      } catch (error) {
-        console.log(error,'error in submit user');
-        
-      }
   };
+
   return (
     <div className="shadow-input mx-auto w-full max-w-md rounded-none bg-gray-100 p-4 md:rounded-2xl md:p-8 dark:bg-black mt-5">
       <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">
         Welcome to Formly
       </h2>
 
-      <form className="my-8" onSubmit={handleSubmit}>
+      <form className="my-8" onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-4 flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-2">
           <LabelInputContainer>
             <Label htmlFor="name">Name</Label>
-            <Input
-              id="name"
-              placeholder="Tyler"
-              type="text"
+            <Controller
               name="name"
-              value={state.name}
-              onChange={handleChange}
+              control={control}
+              render={({ field }) => (
+                <Input
+                  id="name"
+                  placeholder="Tyler"
+                  type="text"
+                  {...field}
+                  onBlur={() => trigger("name")} // Trigger validation on blur
+                  className={cn({ "border-red-500": errors.name })}
+                />
+              )}
             />
+            {errors.name && (
+              <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
+            )}
           </LabelInputContainer>
         </div>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="emailId">Email Address</Label>
-          <Input
-            id="emailId"
-            placeholder="projectmayhem@fc.com"
-            type="email"
+          <Controller
             name="emailId"
-            value={state.emailId}
-            onChange={handleChange}
+            control={control}
+            render={({ field }) => (
+              <Input
+                id="emailId"
+                placeholder="projectmayhem@fc.com"
+                type="email"
+                {...field}
+                onBlur={() => trigger("emailId")}
+                className={cn({ "border-red-500": errors.emailId })}
+              />
+            )}
           />
+          {errors.emailId && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.emailId.message}
+            </p>
+          )}
         </LabelInputContainer>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="password">Password</Label>
-          <Input
-            id="password"
-            placeholder="••••••••"
-            type="password"
+          <Controller
             name="password"
-            value={state.password}
-            onChange={handleChange}
+            control={control}
+            render={({ field }) => (
+              <Input
+                id="password"
+                placeholder="••••••••"
+                type="password"
+                {...field}
+                onBlur={() => trigger("password")}
+                className={cn({ "border-red-500": errors.password })}
+              />
+            )}
           />
+          {errors.password && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.password.message}
+            </p>
+          )}
         </LabelInputContainer>
 
         <button
-          className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-black to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset] cursor-pointer"
+          className={cn(
+            "group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-black to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset] cursor-pointer",
+            { "opacity-50 cursor-not-allowed": !isValid } // Disable if invalid
+          )}
           type="submit"
+          disabled={!isValid} // Disable button until form is valid
         >
           Sign up &rarr;
           <BottomGradient />
@@ -84,6 +148,7 @@ const Register = () => {
     </div>
   );
 };
+
 const BottomGradient = () => {
   return (
     <>
