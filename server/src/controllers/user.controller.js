@@ -52,11 +52,10 @@ export const loginUserController = async (req,res) =>{
      res.cookie("token", token, cookieOptions);
       sendSuccess(
         res,
-        "User created Successfully!",
+        "User Logged in Successfully!",
         {
           id: userData._id,
-          firstName: userData.firstName,
-          lastName: userData.lastName,
+          name: userData.name,
         },
         201
       );

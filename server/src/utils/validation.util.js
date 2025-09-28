@@ -21,3 +21,19 @@ export const validateRegisterUser = [
       "Password should be between 8 and 12 characters and should contain alphanumeric characters,and a special character"
     ),
 ];
+
+export const validateLoginUser = [
+  body("emailId")
+    .trim()
+    .notEmpty()
+    .isEmail()
+    .normalizeEmail()
+    .withMessage("Enter A Valid Email"),
+  body("password")
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+    )
+    .withMessage(
+      "Password should be between 8 and 12 characters and should contain alphanumeric characters,and a special character"
+    ),
+];
