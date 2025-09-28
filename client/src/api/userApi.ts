@@ -6,6 +6,15 @@ export const createUser = async (data: User) => {
     const response = await apiClient.post(`/v1/user/register`, data);
     return response.data;
   } catch (error) {
-    console.error("Error Creating User",error);
+    console.error("Error Creating User", error);
+  }
+};
+
+export const loginUser = async (data: User) => {
+  try {
+    const response = await apiClient.post("/v1/user/login", data);
+    return response.data;
+  } catch (error) {
+    console.error("Error Creating User", error);
   }
 };

@@ -22,6 +22,7 @@ const Navbar = () => {
           <Button
             variant="outline"
             className="bg-transparent text-white dark:text-dark-text"
+            onClick={() => navigate("/login")}
           >
             Sign In
           </Button>
@@ -50,7 +51,10 @@ const Navbar = () => {
         >
           <div className="flex w-full flex-col gap-4 bg-card-bg dark:bg-dark-card-bg p-4">
             <NavbarButton
-              onClick={() => setIsMobileMenuOpen(false)}
+              onClick={() => {
+                setIsMobileMenuOpen(false);
+                navigate("/login");
+              }}
               variant="primary"
               className="w-full bg-primary text-white dark:bg-dark-primary dark:text-dark-text"
             >
