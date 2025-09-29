@@ -64,3 +64,15 @@ export const loginUserController = async (req,res) =>{
     sendError(res,"Internal Error!",error,500)
   }
 }
+
+export const getMe = async (req,res) => {
+  try {
+     if (!req.user) {
+       sendError(res, "Token not found. Invalid User!", error, 401);
+     }
+     res.json(req.user);
+ 
+  } catch (error) {
+    sendError(res, "Internal Error!", error, 500);
+  }
+}
