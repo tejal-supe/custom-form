@@ -27,6 +27,6 @@ userRouter.post(
   handleValidationErrors,
   loginUserController
 );
-userRouter.post("/getMe",authenticateJWT, getMe);
+userRouter.get("/getMe",authenticateJWT, getMe);
 
 export default userRouter;
