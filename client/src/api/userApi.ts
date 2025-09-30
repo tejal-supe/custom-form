@@ -18,3 +18,12 @@ export const loginUser = async (data: User) => {
     console.error("Error Creating User", error);
   }
 };
+
+export const loggedIn = async () =>{
+   try {
+     const response = await apiClient.get("/v1/user/getMe");
+     return response.data;
+   } catch (error) {
+     console.error("Error Creating User", error);
+   }
+}

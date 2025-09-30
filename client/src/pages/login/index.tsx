@@ -8,6 +8,7 @@ import { Input } from "../../components/ui/input";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginUser } from "@/api/userApi";
+import { useAuthStore } from "@/store/authStore";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -45,6 +46,7 @@ const Login = () => {
             password: data.password,
           });
           if(response.success){
+              useAuthStore.getState().login(response.data.user);
             navigate("/")
           }
           console.log(response, "response");

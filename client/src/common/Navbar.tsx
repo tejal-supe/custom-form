@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import { Button } from "../components/ui/button";
 import {
   MobileNav,
@@ -8,11 +10,14 @@ import {
   NavbarButton,
   NavbarLogo,
 } from "@/components/ui/resizable-navbar";
-import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "@/store/authStore";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const { isAuthenticated, user } = useAuthStore();
+console.log(user,'user');
+
 
   return (
     <div className="shadow-sm w-full sticky top-0 bg-primary dark:bg-dark-background z-[9999]">
@@ -24,7 +29,10 @@ const Navbar = () => {
             className="bg-transparent text-white dark:text-dark-text"
             onClick={() => navigate("/login")}
           >
-            Sign In
+            {
+              isAuthenticated ? "Logout":"Sign In"
+            }
+            {/* Sign In */}
           </Button>
           <Button
             variant="outline"

@@ -56,6 +56,7 @@ export const loginUserController = async (req,res) =>{
         {
           id: userData._id,
           name: userData.name,
+          emailId
         },
         201
       );
