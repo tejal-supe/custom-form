@@ -6,15 +6,14 @@ import "./App.css";
 import Routing from "./Routing.tsx";
 import { loggedIn } from "./api/userApi.ts";
 import { useAuthStore } from "./store/authStore.ts";
+import { ThemeProvider } from "./components/theme.provider.tsx";
 
 function App() {
-    const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated } = useAuthStore();
 
   useEffect(() => {
     const fetchData = async () => {
       const data = await loggedIn();
-    console.log(data);
-    
       if (data) {
         useAuthStore.getState().login(data);
       }
@@ -23,10 +22,12 @@ function App() {
   }, [isAuthenticated]);
   return (
     <>
-      <BrowserRouter>
-        <Navbar />
-        <Routing />
-      </BrowserRouter>
+      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+        <BrowserRouter>
+          <Navbar />
+          <Routing />
+        </BrowserRouter>
+      </ThemeProvider>
     </>
   );
 }
