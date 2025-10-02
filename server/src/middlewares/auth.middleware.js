@@ -9,14 +9,14 @@ export const authenticateJWT = async (req, res, next) => {
     const token = req.cookies?.token;
 
     if (!token) {
-      sendError(res, "Access denied. No token provided!", error, 400);
+      sendError(res, "Access denied. No token provided!", null, 400);
     }
 
     const decoded = jwt.verify(token, config.jwt_secret);
     const userDecoded = await User.findById(decoded.id).select("-password");
 
     if (!userDecoded) {
-      sendError(res, "Token not found. Invalid User!", error, 401);
+      sendError(res, "Token not found. Invalid User!", null, 401);
     }
 
     req.user = userDecoded;

@@ -47,7 +47,7 @@ const Login = () => {
           });
           if(response.success){
               useAuthStore.getState().login(response.data.user);
-            navigate("/")
+            navigate("/dashboard");
           }
           console.log(response, "response");
         } catch (error) {
