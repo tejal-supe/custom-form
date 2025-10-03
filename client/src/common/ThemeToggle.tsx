@@ -1,5 +1,4 @@
 import { Moon, Sun } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -10,25 +9,55 @@ import {
 import { useTheme } from "../components/theme.provider";
 
 export function ModeToggle() {
-  const { setTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
+
+  // Determine icon color based on theme
+  const iconColor = theme === "dark" ? "#a78bfa" : "#7c3aed"; // purple accent for dark/light
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Button variant="outline" size="icon">
-          <Sun className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
-          <Moon className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
+        <Button
+          variant="outline"
+          size="icon"
+          className="relative border-violet-400 text-violet-700 hover:bg-violet-100 transition"
+        >
+          <Sun
+            className={`h-[1.2rem] w-[1.2rem] transition-all absolute ${
+              theme === "light" ? "scale-100 rotate-0" : "scale-0 -rotate-90"
+            }`}
+            color={theme === "light" ? iconColor : undefined}
+          />
+          <Moon
+            className={`h-[1.2rem] w-[1.2rem] transition-all absolute ${
+              theme === "dark" ? "scale-100 rotate-0" : "scale-0 rotate-90"
+            }`}
+            color={theme === "dark" ? iconColor : undefined}
+          />
           <span className="sr-only">Toggle theme</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme("light")}>
+
+      <DropdownMenuContent
+        align="end"
+        className="bg-white dark:bg-violet-900 border border-violet-200 dark:border-violet-700 rounded-md shadow-md"
+      >
+        <DropdownMenuItem
+          className="text-violet-900 dark:text-violet-200 hover:bg-violet-100 dark:hover:bg-violet-700 transition"
+          onClick={() => setTheme("light")}
+        >
           Light
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")}>
+        <DropdownMenuItem
+          className="text-violet-900 dark:text-violet-200 hover:bg-violet-100 dark:hover:bg-violet-700 transition"
+          onClick={() => setTheme("dark")}
+        >
           Dark
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")}>
+        <DropdownMenuItem
+          className="text-violet-900 dark:text-violet-200 hover:bg-violet-100 dark:hover:bg-violet-700 transition"
+          onClick={() => setTheme("system")}
+        >
           System
         </DropdownMenuItem>
       </DropdownMenuContent>

@@ -13,40 +13,97 @@ import {
 import { useAuthStore } from "@/store/authStore";
 import { ModeToggle } from "./ThemeToggle";
 
-const Navbar = () => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+const AuthButtons = ({
+  isMobile,
+  onClick,
+}: {
+  isMobile?: boolean;
+  onClick?: () => void;
+}) => {
   const navigate = useNavigate();
   const { isAuthenticated, user } = useAuthStore();
 
+  if (isAuthenticated) {
+    return isMobile ? (
+      <NavbarButton
+        onClick={() => {
+          onClick?.();
+          navigate("/dashboard");
+        }}
+        className="w-full bg-violet-600 text-white hover:bg-violet-900 transition"
+      >
+        Hello, {user?.name}
+      </NavbarButton>
+    ) : (
+      <Button
+        variant="ghost"
+        className="text-violet-900 hover:text-violet-600 transition-colors"
+        onClick={() => navigate("/dashboard")}
+      >
+        Dashboard
+      </Button>
+    );
+  }
+
   return (
-    <div className="shadow-sm w-full sticky top-0 bg-primary dark:bg-dark-background z-[9999]">
-      <div className=" hidden md:flex w-full mx-auto max-w-7xl p-3  items-center justify-between">
+    <>
+      {isMobile ? (
+        <>
+          <NavbarButton
+            onClick={() => {
+              onClick?.();
+              navigate("/login");
+            }}
+            className="w-full border border-violet-400 text-violet-700 hover:bg-violet-100 transition"
+          >
+            Login
+          </NavbarButton>
+          <NavbarButton
+            onClick={() => {
+              onClick?.();
+              navigate("/register");
+            }}
+            className="w-full bg-violet-600 text-white hover:bg-violet-900 transition"
+          >
+            Get Started
+          </NavbarButton>
+        </>
+      ) : (
+        <>
+          <Button
+            variant="outline"
+            className="border-violet-400 text-violet-700 hover:bg-violet-100 transition"
+            onClick={() => navigate("/login")}
+          >
+            Sign In
+          </Button>
+          <Button
+            className="bg-violet-600 text-white hover:bg-violet-900 transition"
+            onClick={() => navigate("/register")}
+          >
+            Get Started
+          </Button>
+        </>
+      )}
+    </>
+  );
+};
+
+const Navbar = () => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  return (
+    <header className="w-full sticky top-0 z-[9999] bg-violet-50 shadow-sm border-b border-violet-200">
+      {/* Desktop Navbar */}
+      <div className="hidden md:flex w-full mx-auto max-w-7xl px-6 py-3 items-center justify-between">
         <NavbarLogo />
-        {isAuthenticated ? (
-          <>
-          
-            <ModeToggle/>
-          </>
-        ) : (
-          <div className="flex items-center gap-4">
-            <Button
-              variant="outline"
-              className="bg-transparent text-white dark:text-dark-text"
-              onClick={() => navigate("/login")}
-            >
-              Sign In
-            </Button>
-            <Button
-              variant="outline"
-              className="bg-transparent text-white dark:text-dark-text"
-              onClick={() => navigate("/register")}
-            >
-              Get Started
-            </Button>
-          </div>
-        )}
+        <div className="flex items-center gap-4">
+          <AuthButtons />
+          <ModeToggle />
+        </div>
       </div>
-      {/* Mobile Navigation */}
+
+      {/* Mobile Navbar */}
       <MobileNav>
         <MobileNavHeader>
           <NavbarLogo />
@@ -60,46 +117,12 @@ const Navbar = () => {
           isOpen={isMobileMenuOpen}
           onClose={() => setIsMobileMenuOpen(false)}
         >
-          <div className="flex w-full flex-col gap-4 bg-card-bg dark:bg-dark-card-bg p-4">
-            {isAuthenticated ? (
-              <NavbarButton
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  navigate("/dashboard");
-                }}
-                variant="primary"
-                className="w-full bg-primary text-white dark:bg-dark-primary dark:text-dark-text"
-              >
-                Hello, {user?.name}
-              </NavbarButton>
-            ) : (
-              <>
-                <NavbarButton
-                  onClick={() => {
-                    setIsMobileMenuOpen(false);
-                    navigate("/login");
-                  }}
-                  variant="primary"
-                  className="w-full bg-primary text-white dark:bg-dark-primary dark:text-dark-text"
-                >
-                  Login
-                </NavbarButton>
-                <NavbarButton
-                  onClick={() => {
-                    setIsMobileMenuOpen(false);
-                    navigate("/register");
-                  }}
-                  variant="primary"
-                  className="w-full bg-primary text-white dark:bg-dark-primary dark:text-dark-text"
-                >
-                  Get Started
-                </NavbarButton>
-              </>
-            )}
+          <div className="flex w-full flex-col gap-4 bg-violet-50 p-4">
+            <AuthButtons isMobile onClick={() => setIsMobileMenuOpen(false)} />
           </div>
         </MobileNavMenu>
       </MobileNav>
-    </div>
+    </header>
   );
 };
 
