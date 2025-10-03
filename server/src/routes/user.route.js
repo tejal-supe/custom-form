@@ -8,6 +8,7 @@ import { handleValidationErrors } from "../middlewares/validation.middleware.js"
 import {
   getMe,
   loginUserController,
+  logoutController,
   regsiterUserController,
 } from "../controllers/user.controller.js";
 import { authenticateJWT } from "../middlewares/auth.middleware.js";
@@ -28,5 +29,7 @@ userRouter.post(
   loginUserController
 );
 userRouter.get("/getMe",authenticateJWT, getMe);
+
+userRouter.post("/logout",authenticateJWT,logoutController);
 
 export default userRouter;
